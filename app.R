@@ -1,5 +1,6 @@
 library(shiny)
 library(plotly)
+library(dplyr)
 
 weather <- read.csv("data/KSEA.csv", stringsAsFactors = FALSE)
 
@@ -19,7 +20,8 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$tempplot <- renderPlotly({
-    plot_ly(weather, x = ~actual_mean_temp, y = ~actual_min_temp)
+    temp.input <- weather %>% filter(actual_mean_temp > input$temp[1]) %>% filter(actual_mean_temp < input$temp[2])
+    plot_ly(temp.input, x = ~actual_mean_temp, y = ~actual_min_temp)
   })
 }
 

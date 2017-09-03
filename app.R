@@ -19,13 +19,14 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
+  temp.input <- reactive({
+    weather %>% filter(actual_mean_temp > input$temp[1]) %>% filter(actual_mean_temp < input$temp[2])
+  })
   output$tempplot <- renderPlotly({
-    temp.input <- weather %>% filter(actual_mean_temp > input$temp[1]) %>% filter(actual_mean_temp < input$temp[2])
-    plot_ly(temp.input, x = ~actual_mean_temp, y = ~actual_min_temp)
+    plot_ly(temp.input(), x = ~actual_mean_temp, y = ~actual_min_temp)
   })
   output$temptable <- renderTable({
-    temp.input <- weather %>% filter(actual_mean_temp > input$temp[1]) %>% filter(actual_mean_temp < input$temp[2])
-    temp.input
+    temp.input()
   })
 }
 

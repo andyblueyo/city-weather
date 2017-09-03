@@ -1,4 +1,6 @@
 library(shiny)
+library(plotly)
+
 weather <- read.csv("data/KSEA.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
@@ -9,15 +11,15 @@ ui <- fluidPage(
       sliderInput(inputId = "temp", label = "Temp Range", min = 0, max = 100, value = c(25,75))
     ),
     mainPanel(
-      plotOutput("tempplot"),
+      plotlyOutput("tempplot"),
       br(),
       tableOutput("temptable"))
   )
 )
 
 server <- function(input, output) {
-  output$tempplot <- renderPlot({
-    plot(rnorm(input$temp[1]))
+  output$tempplot <- renderPlotly({
+    plot_ly(weather, x = ~actual_mean_temp, y = ~actual_min_temp)
   })
 }
 

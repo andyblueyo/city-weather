@@ -12,9 +12,11 @@ ui <- fluidPage(
       sliderInput(inputId = "temp", label = "Temp Range", min = 0, max = 100, value = c(25,75))
     ),
     mainPanel(
-      plotlyOutput("tempplot"),
-      br(),
-      tableOutput("temptable"))
+      tabsetPanel(
+        tabPanel("Plot", plotlyOutput("tempplot")),
+        tabPanel("Table", tableOutput("temptable"))
+      )
+    )
   )
 )
 

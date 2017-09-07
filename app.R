@@ -23,17 +23,18 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   temp.input <- reactive({
-    weather %>% filter(actual_mean_temp > input$temp[1]) %>% filter(actual_mean_temp < input$temp[2])
+    weather %>% filter(actual_max_temp > input$temp[1]) %>% filter(actual_max_temp < input$temp[2])
   })
   output$tempplot <- renderPlotly({
     x <- list(
-      title = "Actual Mean Temp",
+      title = "Date",
       tickangle=45
     )
     y <- list(
-      title = "Actual Min Temp"
+      title = "Temp"
     )
-    plot_ly(temp.input(), x = ~date, y = ~actual_min_temp, hoverinfo ='text', text = ~paste('Date: ', date, '<br> Temp: ', actual_min_temp)) %>% layout(xaxis = x, yaxis = y)
+    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'bar', hoverinfo ='text', text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
+      add_trace(y = ~actual_min_temp, name = 'Min Temp') %>% layout(xaxis = x, yaxis = y, barmode = 'overlay')
   })
   output$temptable <- renderTable({
     temp.input()

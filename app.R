@@ -27,12 +27,13 @@ server <- function(input, output) {
   })
   output$tempplot <- renderPlotly({
     x <- list(
-      title = "Actual Mean Temp"
+      title = "Actual Mean Temp",
+      tickangle=45
     )
     y <- list(
       title = "Actual Min Temp"
     )
-    plot_ly(temp.input(), x = ~actual_mean_temp, y = ~actual_min_temp) %>% layout(xaxis = x, yaxis = y)
+    plot_ly(temp.input(), x = ~date, y = ~actual_min_temp, hoverinfo ='text', text = ~paste('Date: ', date, '<br> Temp: ', actual_min_temp)) %>% layout(xaxis = x, yaxis = y)
   })
   output$temptable <- renderTable({
     temp.input()

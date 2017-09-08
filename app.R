@@ -33,8 +33,11 @@ server <- function(input, output) {
     y <- list(
       title = "Temp"
     )
+    m <- list(
+      b = 160
+    )
     plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'bar', hoverinfo ='text', text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
-      add_trace(y = ~actual_min_temp, name = 'Min Temp') %>% layout(xaxis = x, yaxis = y, barmode = 'overlay')
+      add_trace(y = ~actual_min_temp, name = 'Min Temp') %>% layout(xaxis = x, yaxis = y, barmode = 'overlay', margin = m)
   })
   output$temptable <- renderTable({
     temp.input()

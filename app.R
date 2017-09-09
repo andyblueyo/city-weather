@@ -8,7 +8,7 @@ ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "AH NOPE"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("type", "Temp Type", choices = c("1", "2", "3"), selected = "2", multiple = TRUE),
+      selectInput("type", "Temp Type", choices = c("Max", "Min", "Average"), selected = "Max", multiple = TRUE),
       dateRangeInput(inputId = "date", label = "Date Range", start = "2014-10-1", end = "2015-6-8", min = "2014-10-1", max = "2015-6-9"),
       sliderInput(inputId = "temp", label = "Temp Range", min = 0, max = 100, value = c(25,75))
     ),

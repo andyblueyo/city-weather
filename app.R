@@ -8,7 +8,7 @@ ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "AH NOPE"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("type", "Temp Type", choices = c("Max", "Min", "Average"), selected = "Max", multiple = TRUE),
+      selectInput("type", "Temp Type", choices = c("Max", "Min", "Mean"), selected = "Max", multiple = TRUE),
       dateRangeInput(inputId = "date", label = "Date Range", start = "2014-10-1", end = "2015-6-8", min = "2014-10-1", max = "2015-6-9"),
       sliderInput(inputId = "temp", label = "Temp Range", min = 0, max = 100, value = c(25,75))
     ),
@@ -36,8 +36,10 @@ server <- function(input, output) {
     m <- list(
       b = 160
     )
-    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'bar', hoverinfo ='text', text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
-      add_trace(y = ~actual_min_temp, name = 'Min Temp') %>% layout(xaxis = x, yaxis = y, barmode = 'overlay', margin = m)
+    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'bar', opacity = 0.5, hoverinfo ='text', 
+            text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
+      add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5) %>% 
+      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5) %>% layout(xaxis = x, yaxis = y, barmode = 'overlay', margin = m)
   })
   output$temptable <- renderTable({
     temp.input()

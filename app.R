@@ -9,7 +9,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       selectInput("type", "Temp Type", choices = c("Max", "Min", "Mean"), selected = "Max", multiple = TRUE),
-      dateRangeInput(inputId = "date", label = "Date Range", start = "2014-10-1", end = "2015-6-8", min = "2014-10-1", max = "2015-6-9"),
+      dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
       sliderInput(inputId = "temp", label = "Temp Range", min = 0, max = 100, value = c(25,75))
     ),
     mainPanel(

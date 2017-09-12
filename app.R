@@ -28,18 +28,21 @@ server <- function(input, output) {
   output$tempplot <- renderPlotly({
     x <- list(
       title = "Date",
-      tickangle=45
+      tickangle=45,
+      zeroline = FALSE
     )
     y <- list(
-      title = "Temp"
+      title = "Temp",
+      zeroline = FALSE
     )
     m <- list(
       b = 160
     )
-    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'bar', opacity = 0.5, hoverinfo ='text', 
+    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'scatter', mode = 'markers',opacity = 0.5, hoverinfo ='text', 
             text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
       add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5) %>% 
-      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5) %>% layout(xaxis = x, yaxis = y, barmode = 'overlay', margin = m)
+      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 1) %>% 
+      layout(xaxis = x, yaxis = y, barmode = 'overlay', margin = m)
   })
   output$temptable <- renderTable({
     temp.input()

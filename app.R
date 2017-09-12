@@ -23,7 +23,8 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   temp.input <- reactive({
-    weather %>% filter(actual_max_temp > input$temp[1]) %>% filter(actual_max_temp < input$temp[2])
+    weather %>% filter(actual_max_temp >= input$temp[1]) %>% filter(actual_max_temp <= input$temp[2]) %>% 
+      filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
   })
   output$tempplot <- renderPlotly({
     x <- list(

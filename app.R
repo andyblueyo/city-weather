@@ -2,17 +2,16 @@ library(shiny)
 library(plotly)
 library(dplyr)
 
-weather <- read.csv("data/KSEA.csv", stringsAsFactors = FALSE)
-#weather$date <- as.POSIXct(weather$date, "%Y-%m-%d")
-weather$date <- as.Date(weather$date, "%Y-%m-%d")
+location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
+
 
 ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "AH NOPE"),
   sidebarLayout(
     sidebarPanel(
-      #selectInput("type", "Temp Type", choices = c("Max", "Min", "Mean"), selected = "Max", multiple = TRUE),
+      uiOutput("cityOutput"),
       dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
-      sliderInput(inputId = "temp", label = "Temp Range", min = 0, max = 100, value = c(20,75))
+      sliderInput(inputId = "temp", label = "Temp Range", min = -20, max = 150, value = c(20,75))
     ),
     mainPanel(
       tabsetPanel(
@@ -24,8 +23,18 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
+  output$cityOutput <- renderUI({
+    selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle")
+  })
+  myDat <- reactive({
+    rightCity <- location %>% filter(input$cityInput == city)
+    no <- rightCity[[2]]
+    weather <- read.csv(paste0("data/", no, ".csv"), stringsAsFactors = FALSE)
+    weather$date <- as.Date(weather$date, "%Y-%m-%d")
+    return(weather)
+  })
   temp.input <- reactive({
-    weather %>% filter(actual_min_temp >= input$temp[1]) %>% filter(actual_min_temp <= input$temp[2]) %>% 
+    myDat() %>% filter(actual_max_temp >= input$temp[1]) %>% filter(actual_max_temp <= input$temp[2]) %>% 
       filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
   })
   output$tempplot <- renderPlotly({

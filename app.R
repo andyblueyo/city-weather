@@ -4,9 +4,8 @@ library(dplyr)
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
-
 ui <- fluidPage(
-  titlePanel("City Weather", windowTitle = "AH NOPE"),
+  titlePanel("City Weather", windowTitle = "Fun with Data LOL"),
   sidebarLayout(
     sidebarPanel(
       uiOutput("cityOutput"),
@@ -19,6 +18,10 @@ ui <- fluidPage(
         tabPanel("Table", tableOutput("temptable"))
       )
     )
+  ),
+  tags$style(type="text/css", # from https://stackoverflow.com/questions/24652658/suppress-warning-message-in-r-console-of-shiny
+    ".shiny-output-error { visibility: hidden; }",
+    ".shiny-output-error:before { visibility: hidden; }"
   )
 )
 
@@ -26,15 +29,15 @@ server <- function(input, output) {
   output$cityOutput <- renderUI({
     selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle")
   })
-  myDat <- reactive({
+  cityWeatherData <- reactive({
     rightCity <- location %>% filter(input$cityInput == city)
-    no <- rightCity[[2]]
-    weather <- read.csv(paste0("data/", no, ".csv"), stringsAsFactors = FALSE)
+    fileName <- rightCity[[2]]
+    weather <- read.csv(paste0("data/", fileName, ".csv"), stringsAsFactors = FALSE)
     weather$date <- as.Date(weather$date, "%Y-%m-%d")
     return(weather)
   })
   temp.input <- reactive({
-    myDat() %>% filter(actual_max_temp >= input$temp[1]) %>% filter(actual_max_temp <= input$temp[2]) %>% 
+    cityWeatherData() %>% filter(actual_max_temp >= input$temp[1]) %>% filter(actual_max_temp <= input$temp[2]) %>% 
       filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
   })
   output$tempplot <- renderPlotly({
@@ -42,7 +45,6 @@ server <- function(input, output) {
       title = "Date",
       tickangle=45,
       zeroline = FALSE
-      
     )
     y <- list(
       title = "Temp",

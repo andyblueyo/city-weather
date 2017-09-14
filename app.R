@@ -51,7 +51,8 @@ server <- function(input, output) {
       zeroline = FALSE
     )
     m <- list(
-      b = 160
+      b = 160,
+      t = 50
     )
     plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'scatter', mode = 'lines',opacity = 0.5, hoverinfo ='text', 
             text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 

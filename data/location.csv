@@ -1,3 +1,11 @@
 city ,file_name
-Seattle,KSEA
-Phoenix,KPHX
+"Seattle, WA",KSEA
+"Phoenix, AZ",KPHX
+"Charlotte, NC",KCLT
+"Los Angeles, CA",KCQT
+"Houston, TX",KHOU
+"Indianapolis, IN",KIND
+"Jacksonville, FL",KJAX
+"Chicago, IL",KMDW
+"New York, NY",KNYC
+"Philadelphia, PA",KPHL

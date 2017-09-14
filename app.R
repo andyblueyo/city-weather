@@ -55,7 +55,7 @@ server <- function(input, output) {
             text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
       add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5) %>% 
       add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5) %>% 
-      layout(xaxis = x, yaxis = y, barmode = 'overlay', margin = m)
+      layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$temptable <- renderTable({
     temp.input()

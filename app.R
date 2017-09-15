@@ -10,7 +10,7 @@ ui <- fluidPage(
     sidebarPanel(
       uiOutput("cityOutput"),
       dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
-      sliderInput(inputId = "temp", label = "Temp Range", min = -20, max = 150, value = c(20,75))
+      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75))
     ),
     mainPanel(
       tabsetPanel(
@@ -60,8 +60,13 @@ server <- function(input, output) {
       add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
+  tableDate <- reactive({
+    dateT <- as.character(temp.input()[,1])
+    temp.input() %>% mutate(date = dateT)
+  })
   output$temptable <- renderTable({
-    temp.input()
+    tableDate()
+    
   })
 }
 

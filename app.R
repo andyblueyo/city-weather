@@ -61,12 +61,11 @@ server <- function(input, output) {
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   tableDate <- reactive({
-    dateT <- as.character(temp.input()[,1])
-    temp.input() %>% mutate(date = dateT)
+    dateTable <- as.character(temp.input()[,1])
+    temp.input() %>% mutate(date = dateTable)
   })
   output$temptable <- renderTable({
     tableDate()
-    
   })
 }
 

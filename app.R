@@ -10,9 +10,8 @@ ui <- fluidPage(
     sidebarPanel(
       uiOutput("cityOutput"),
       dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
-      
-      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)),
-      uiOutput("tempChoice")
+      radioButtons(inputId = "tempType", label = "Temp Value", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp")),
+      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75))
     ),
     mainPanel(
       tabsetPanel(
@@ -38,17 +37,14 @@ server <- function(input, output) {
     weather$date <- as.Date(weather$date, "%Y-%m-%d")
     return(weather)
   })
-  output$tempChoice <- renderUI({
-    radioButtons("tempChoice1", label = "Temp Value", choices = list("Max" = 'actual_max_temp', "Mean" = 'actual_mean_temp', "Min" = 'actual_min_temp'))
-  })
   temp.input <- reactive({
-    cityWeatherData() %>% filter(actual_max_temp >= input$temp[1]) %>% filter(actual_max_temp <= input$temp[2]) %>% 
+    cityWeatherData() %>% filter(actual_min_temp >= input$temp[1]) %>% filter(actual_min_temp <= input$temp[2]) %>% 
       filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
   })
   output$tempplot <- renderPlotly({
     x <- list(
       title = "Date",
-      tickangle=45,
+      tickangle = 45,
       zeroline = FALSE
     )
     y <- list(

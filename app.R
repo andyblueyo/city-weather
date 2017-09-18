@@ -11,7 +11,7 @@ ui <- fluidPage(
     sidebarPanel(
       uiOutput("cityOutput"),
       dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
-      radioButtons(inputId = "tempType", label = "Temp Value", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp")),
+      radioButtons(inputId = "tempType", label = "Temp Range Type", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
       sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75))
     ),
     mainPanel(

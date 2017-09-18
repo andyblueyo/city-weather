@@ -1,6 +1,7 @@
 library(shiny)
 library(plotly)
 library(dplyr)
+library(lazyeval)
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -38,7 +39,9 @@ server <- function(input, output) {
     return(weather)
   })
   temp.input <- reactive({
-    cityWeatherData() %>% filter(actual_min_temp >= input$temp[1]) %>% filter(actual_min_temp <= input$temp[2]) %>% 
+    maxTemp <- paste0(input$tempType, ">=", input$temp[1])
+    minTemp <- paste0(input$tempType, "<=", input$temp[2])
+    cityWeatherData() %>% filter_(maxTemp) %>% filter_(minTemp) %>% 
       filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
   })
   output$tempplot <- renderPlotly({

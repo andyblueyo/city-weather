@@ -69,7 +69,9 @@ server <- function(input, output) {
   })
   output$weathermap <- renderLeaflet({
     mapStates <- map("state", fill = TRUE, plot = FALSE)
-    leaflet(data = mapStates) %>% addTiles() %>% addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
+    leaflet(data = mapStates) %>% addTiles() %>% 
+      addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
+      addMarkers(lat = location[,3], lng = location[,4], popup = location[,1])
       
   })
   tableDate <- reactive({

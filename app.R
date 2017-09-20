@@ -2,6 +2,8 @@ library(shiny)
 library(plotly)
 library(dplyr)
 library(lazyeval)
+library(leaflet)
+library(maps)
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -17,6 +19,7 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(
         tabPanel("Plot", plotlyOutput("tempplot")),
+        tabPanel("Map", leafletOutput("weathermap")),
         tabPanel("Table", tableOutput("temptable"))
       )
     )
@@ -63,6 +66,11 @@ server <- function(input, output) {
       add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5) %>% 
       add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
+  })
+  output$weathermap <- renderLeaflet({
+    mapStates <- map("state", fill = TRUE, plot = FALSE)
+    leaflet(data = mapStates) %>% addTiles() %>% addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
+      
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])

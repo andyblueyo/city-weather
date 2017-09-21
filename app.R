@@ -11,12 +11,12 @@ ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "Fun with Data LOL"),
   sidebarLayout(
     sidebarPanel(
-      uiOutput("plotTabUi")
+      uiOutput("tabUi")
     ),
     mainPanel(
-      tabsetPanel(id = "pls",
+      tabsetPanel(id = "tab",
         tabPanel( title = "Plot", value = "plot", plotlyOutput("tempplot")),
-        tabPanel("Map", leafletOutput("weathermap")),
+        tabPanel("Map", value = "map", leafletOutput("weathermap")),
         tabPanel("Table", value = "table", tableOutput("temptable"))
       )
     )
@@ -28,19 +28,17 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  output$plotTabUi <- renderUI({
-    if (input$pls == "plot" | input$pls == "table") {
+  output$tabUi <- renderUI({
+    if (input$tab == "plot" | input$tab == "table") {
       uiList <- list(selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle"),
                      dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
                      radioButtons(inputId = "tempType", label = "Temp Range Type", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
                      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)))
     } else {
-      uiList <- list(radioButtons(inputId = "pls", label = "change", choices = 1:3))
+      uiList <- list(dateInput(inputId = "date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
     }
     return(uiList)
-    
   })
-
   output$cityOutput <- renderUI({
     selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle")
   })

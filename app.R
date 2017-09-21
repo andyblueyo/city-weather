@@ -11,16 +11,13 @@ ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "Fun with Data LOL"),
   sidebarLayout(
     sidebarPanel(
-      uiOutput("cityOutput"),
-      dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
-      radioButtons(inputId = "tempType", label = "Temp Range Type", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
-      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75))
+      uiOutput("plotTabUi")
     ),
     mainPanel(
-      tabsetPanel(
-        tabPanel("Plot", plotlyOutput("tempplot")),
+      tabsetPanel(id = "pls",
+        tabPanel( title = "Plot", value = "plot", plotlyOutput("tempplot")),
         tabPanel("Map", leafletOutput("weathermap")),
-        tabPanel("Table", tableOutput("temptable"))
+        tabPanel("Table", value = "table", tableOutput("temptable"))
       )
     )
   ),
@@ -31,6 +28,19 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
+  output$plotTabUi <- renderUI({
+    if (input$pls == "plot" | input$pls == "table") {
+      uiList <- list(selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle"),
+                     dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
+                     radioButtons(inputId = "tempType", label = "Temp Range Type", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
+                     sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)))
+    } else {
+      uiList <- list(radioButtons(inputId = "pls", label = "change", choices = 1:3))
+    }
+    return(uiList)
+    
+  })
+
   output$cityOutput <- renderUI({
     selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle")
   })
@@ -72,7 +82,6 @@ server <- function(input, output) {
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
       addMarkers(lat = location[,3], lng = location[,4], popup = location[,1])
-      
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])

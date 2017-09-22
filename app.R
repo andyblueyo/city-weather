@@ -4,6 +4,7 @@ library(dplyr)
 library(lazyeval)
 library(leaflet)
 library(maps)
+library(htmltools)
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -79,7 +80,7 @@ server <- function(input, output) {
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
-      addMarkers(lat = location[,3], lng = location[,4], popup = location[,1])
+      addMarkers(lat = location[,3], lng = location[,4], label = ~htmlEscape(location[,1]))
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])

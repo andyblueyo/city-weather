@@ -37,7 +37,7 @@ server <- function(input, output) {
       uiList <- list(selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle"),
                      dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
                      radioButtons(inputId = "tempType", label = "Temp Range Type", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
-                     radioButtons(inputId = "tempUnit", label = "Temp Unit", choices = list("Celsius" = "c", "Farenheit" = "f"), inline = TRUE),
+                     radioButtons(inputId = "tempUnit", label = "Temp Unit", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE),
                      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)))
     } else {
       uiList <- list(dateInput(inputId = "date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
@@ -52,11 +52,6 @@ server <- function(input, output) {
     fileName <- rightCity[[2]]
     weather <- read.csv(paste0("data/", fileName, ".csv"), stringsAsFactors = FALSE)
     weather$date <- as.Date(weather$date, "%Y-%m-%d")
-    # if (input$tempUnit == "f") {
-    #   weather$actual_mean_temp <- celsius.to.fahrenheit(weather$actual_mean_temp)
-    #   weather$actual_min_temp <- celsius.to.fahrenheit(weather$actual_min_temp)
-    #   weather$actual_max_temp <- celsius.to.fahrenheit(weather$actual_max_temp)
-    # } else 
     if (input$tempUnit == "c") {
       weather$actual_mean_temp <- fahrenheit.to.celsius(weather$actual_mean_temp)
       weather$actual_min_temp <- fahrenheit.to.celsius(weather$actual_min_temp)

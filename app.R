@@ -5,16 +5,9 @@ library(lazyeval)
 library(leaflet)
 library(maps)
 library(htmltools)
+library(weathermetrics)
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
-f2c <- function(f) {
-  c <- ((f - 32) * (5/9))
-  return (c)
-}
-c2f <- function(c) {
-  f <- ((c * (9/5)) + 32)
-  return (f)
-}
 
 ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "Fun with Data LOL"),
@@ -59,14 +52,15 @@ server <- function(input, output) {
     fileName <- rightCity[[2]]
     weather <- read.csv(paste0("data/", fileName, ".csv"), stringsAsFactors = FALSE)
     weather$date <- as.Date(weather$date, "%Y-%m-%d")
-    if (input$tempUnit == "f") {
-      weather$actual_mean_temp <- c2f(weather$actual_mean_temp)
-      weather$actual_min_temp <- c2f(weather$actual_min_temp)
-      weather$actual_max_temp <- c2f(weather$actual_max_temp)
-    } else if (input$tempUnit == "c") {
-      weather$actual_mean_temp <- f2c(weather$actual_mean_temp)
-      weather$actual_min_temp <- f2c(weather$actual_min_temp)
-      weather$actual_max_temp <- f2c(weather$actual_max_temp)
+    # if (input$tempUnit == "f") {
+    #   weather$actual_mean_temp <- celsius.to.fahrenheit(weather$actual_mean_temp)
+    #   weather$actual_min_temp <- celsius.to.fahrenheit(weather$actual_min_temp)
+    #   weather$actual_max_temp <- celsius.to.fahrenheit(weather$actual_max_temp)
+    # } else 
+    if (input$tempUnit == "c") {
+      weather$actual_mean_temp <- fahrenheit.to.celsius(weather$actual_mean_temp)
+      weather$actual_min_temp <- fahrenheit.to.celsius(weather$actual_min_temp)
+      weather$actual_max_temp <- fahrenheit.to.celsius(weather$actual_max_temp)
     }
     return(weather)
   })

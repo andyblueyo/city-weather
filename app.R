@@ -62,8 +62,31 @@ server <- function(input, output) {
   temp.input <- reactive({
     maxTemp <- paste0(input$tempType, ">=", input$temp[1])
     minTemp <- paste0(input$tempType, "<=", input$temp[2])
-    cityWeatherData() %>% filter_(maxTemp) %>% filter_(minTemp) %>% 
+    temp <- cityWeatherData() %>% filter_(maxTemp) %>% filter_(minTemp) %>% 
       filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
+    
+    data.length <- length(temp$date)
+    # Find min and max. Because the data is sorted, this will be
+    # the first and last element.
+    time.min <- temp$date[1]
+    time.max <- temp$date[data.length]
+    
+    # generate a time sequence with 1 month intervals to fill in
+    # missing dates
+    all.dates <- seq(time.min, time.max, by="day")
+    
+    # Convert all dates to a data frame. Note that we're putting
+    # the new dates into a column called "time" just like the
+    # original column. This will allow us to merge the data.
+    all.dates.frame <- data.frame(list(date=all.dates))
+    
+    # Merge the two datasets: the full dates and original data
+    merged.data <- merge(all.dates.frame, sorted.data, all=T)
+    
+    return(merged.data)
+  })
+  gap.Data <- reactive({
+    sorted.data <- temp.input()[order(temp$date),]
   })
   output$tempplot <- renderPlotly({
     x <- list(
@@ -79,10 +102,10 @@ server <- function(input, output) {
       b = 160,
       t = 50
     )
-    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'scatter', mode = 'lines',opacity = 0.5, hoverinfo ='text', 
+    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'scatter', mode = 'lines', connectgaps = FALSE, opacity = 0.5, hoverinfo ='text', 
             text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
-      add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5) %>% 
-      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5) %>% 
+      add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5, connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5, connectgaps = FALSE) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$weathermap <- renderLeaflet({

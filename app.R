@@ -62,6 +62,7 @@ server <- function(input, output) {
   temp.input <- reactive({
     maxTemp <- paste0(input$tempType, ">=", input$temp[1])
     minTemp <- paste0(input$tempType, "<=", input$temp[2])
+    
     temp <- cityWeatherData() %>% filter_(maxTemp) %>% filter_(minTemp) %>% 
       filter(date >= input$date[1]) %>%  filter(date <= input$date[2])
     
@@ -81,12 +82,9 @@ server <- function(input, output) {
     all.dates.frame <- data.frame(list(date=all.dates))
     
     # Merge the two datasets: the full dates and original data
-    merged.data <- merge(all.dates.frame, sorted.data, all=T)
+    merged.data <- merge(all.dates.frame, temp, all=T)
     
     return(merged.data)
-  })
-  gap.Data <- reactive({
-    sorted.data <- temp.input()[order(temp$date),]
   })
   output$tempplot <- renderPlotly({
     x <- list(

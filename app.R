@@ -114,7 +114,10 @@ server <- function(input, output) {
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])
-    temp.input() %>% mutate(date = dateTable)
+    temp <- temp.input() %>% mutate(date = dateTable)
+    temp <- temp[complete.cases(temp), ]
+    return(temp)
+    
   })
   output$temptable <- renderTable({
     tableDate()

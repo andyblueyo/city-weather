@@ -20,8 +20,8 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(id = "tab",
         tabPanel( title = "Plot", value = "plot", plotlyOutput("tempplot")),
-        tabPanel("Map", value = "map", leafletOutput("weathermap")),
-        tabPanel("Table", value = "table", tableOutput("temptable"))
+        tabPanel("Table", value = "table", tableOutput("temptable")),
+        tabPanel("Map", value = "map", leafletOutput("weathermap"))
       )
     )
   ),
@@ -101,9 +101,11 @@ server <- function(input, output) {
       t = 50
     )
     plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'scatter', mode = 'lines', connectgaps = FALSE, opacity = 0.5, hoverinfo ='text', 
-            text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp), name = 'Max Temp') %>% 
+            text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp, '<br> Avg Min Temp: ', average_min_temp, '<br> Avg Max Temp: ', average_max_temp), name = 'Max Temp') %>% 
       add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5, connectgaps = FALSE) %>% 
-      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5, connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5, connectgaps = FALSE) %>%
+      add_trace(y = ~average_min_temp, name = 'Average Min Temp', opacity = 0.5, connectgaps = FALSE) %>% 
+      add_trace(y = ~average_max_temp, name = 'Average Max Temp', opacity = 0.5, connectgaps = FALSE) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$weathermap <- renderLeaflet({
@@ -117,7 +119,6 @@ server <- function(input, output) {
     temp <- temp.input() %>% mutate(date = dateTable)
     temp <- temp[complete.cases(temp), ]
     return(temp)
-    
   })
   output$temptable <- renderTable({
     tableDate()

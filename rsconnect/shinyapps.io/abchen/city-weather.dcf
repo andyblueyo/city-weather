@@ -1,0 +1,12 @@
+name: city-weather
+title: city-weather
+username:
+account: abchen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 220215
+bundleId: 1002972
+url: https://abchen.shinyapps.io/city-weather/
+when: 1506668692.55901
+asMultiple: FALSE
+asStatic: FALSE

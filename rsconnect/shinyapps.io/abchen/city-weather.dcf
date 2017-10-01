@@ -5,8 +5,8 @@ account: abchen
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 220215
-bundleId: 1002976
+bundleId: 1002985
 url: https://abchen.shinyapps.io/city-weather/
-when: 1506669129.56443
+when: 1506669569.54068
 asMultiple: FALSE
 asStatic: FALSE

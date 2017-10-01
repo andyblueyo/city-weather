@@ -20,7 +20,7 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(id = "tab",
         tabPanel( title = "Plot", value = "plot", plotlyOutput("tempplot")),
-        tabPanel("Table", value = "table", tableOutput("temptable")),
+        tabPanel("Table", value = "table", dataTableOutput("temptable")),
         tabPanel("Map", value = "map", leafletOutput("weathermap"))
       )
     )
@@ -120,7 +120,7 @@ server <- function(input, output) {
     temp <- temp[complete.cases(temp), ]
     return(temp)
   })
-  output$temptable <- renderTable({
+  output$temptable <- renderDataTable({
     tableDate()
   })
 }

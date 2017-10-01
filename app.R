@@ -56,6 +56,8 @@ server <- function(input, output) {
       weather$actual_mean_temp <- fahrenheit.to.celsius(weather$actual_mean_temp)
       weather$actual_min_temp <- fahrenheit.to.celsius(weather$actual_min_temp)
       weather$actual_max_temp <- fahrenheit.to.celsius(weather$actual_max_temp)
+      weather$average_min_temp <- fahrenheit.to.celsius(weather$average_min_temp)
+      weather$average_max_temp <- fahrenheit.to.celsius(weather$average_max_temp)
     }
     return(weather)
   })

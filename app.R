@@ -6,6 +6,8 @@ library(leaflet)
 library(maps)
 library(htmltools)
 library(weathermetrics)
+library(DT)
+
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -123,7 +125,8 @@ server <- function(input, output) {
     return(temp)
   })
   output$temptable <- renderDataTable({
-    tableDate()
+    datatable(tableDate(), colnames = c("Date", "Actual Mean Temp", "Actual Min Temp", "Actual Max Temp", "Average Min Temp", "Average Max Temp", "Record Min Temp", "Record Min Temp", "Record Max Temp", "Record Min Temp Year", "Record Max Temp Year", "Actual Precipitation", "Average Precipitation", "Record Precipitation"))
+    #tableDate()
   })
 }
 

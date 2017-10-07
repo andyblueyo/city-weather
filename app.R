@@ -14,7 +14,8 @@ location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "US City Weather"),
   p("This is an interactive data visualization focused on data from the ", 
-    tags$a(href = "https://fivethirtyeight.com/features/what-12-months-of-record-setting-temperatures-looks-like-across-the-u-s/", "What 12 Months Of Record-Setting Temperatures Looks Like Across The U.S.")),
+    tags$a(href = "https://fivethirtyeight.com/features/what-12-months-of-record-setting-temperatures-looks-like-across-the-u-s/", "What 12 Months Of Record-Setting Temperatures Looks Like Across The U.S."),
+    "The project is on gitthub."),
   sidebarLayout(
     sidebarPanel(
       uiOutput("tabUi")

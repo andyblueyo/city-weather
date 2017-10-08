@@ -7,7 +7,7 @@ library(maps)
 library(htmltools)
 library(weathermetrics)
 library(DT)
-
+source("tempDates.R")
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 

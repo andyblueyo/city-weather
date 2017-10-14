@@ -7,9 +7,9 @@ library(maps)
 library(htmltools)
 library(weathermetrics)
 library(DT)
-source("tempDates.R")
+#source("tempDates.R")
 
-location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
+#location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "US City Weather"),
@@ -91,6 +91,7 @@ server <- function(input, output) {
     
     return(merged.data)
   })
+
   output$tempplot <- renderPlotly({
     x <- list(
       title = "Date",
@@ -114,10 +115,11 @@ server <- function(input, output) {
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$weathermap <- renderLeaflet({
+    label.pls <- paste(location[,1], location[,5])
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
-      addMarkers(lat = location[,3], lng = location[,4], label = ~htmlEscape(location[,1]))
+      addMarkers(lat = location[,3], lng = location[,4], label = ~htmlEscape(label.pls))
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])

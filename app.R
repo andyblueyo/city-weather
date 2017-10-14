@@ -7,7 +7,7 @@ library(maps)
 library(htmltools)
 library(weathermetrics)
 library(DT)
-#source("tempDates.R")
+source("tempDates.R")
 
 #location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -43,7 +43,7 @@ server <- function(input, output) {
                      radioButtons(inputId = "tempUnit", label = "Temp Unit", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE),
                      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)))
     } else {
-      uiList <- list(dateInput(inputId = "date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
+      uiList <- list(dateInput(inputId = "map.date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
     }
     return(uiList)
   })
@@ -115,7 +115,8 @@ server <- function(input, output) {
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$weathermap <- renderLeaflet({
-    label.pls <- paste(location[,1], location[,5])
+    tempDates(input$map.date)
+    label.pls <- paste(location[,1], 'Actual Mean Temp:',location[,5])
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 

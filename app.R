@@ -116,7 +116,7 @@ server <- function(input, output) {
   })
   output$weathermap <- renderLeaflet({
     tempDates(input$map.date)
-    label.pls <- paste(location[,1], 'Actual Mean Temp:',location[,5])
+    label.pls <- paste0(location[,1], "\n Actual Mean Temp (F):",location[,5])
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 

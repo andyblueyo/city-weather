@@ -9,7 +9,7 @@ library(weathermetrics)
 library(DT)
 source("tempDates.R")
 
-#location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
+location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "US City Weather"),
@@ -115,7 +115,7 @@ server <- function(input, output) {
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$weathermap <- renderLeaflet({
-    tempDates(input$map.date)
+    #tempDates(input$map.date)
     label.pls <- paste0(location[,1], "\n Actual Mean Temp (F):",location[,5])
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 

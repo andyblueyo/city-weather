@@ -7,7 +7,7 @@ library(maps)
 library(htmltools)
 library(weathermetrics)
 library(DT)
-source("tempDates.R")
+#source("tempDates.R")
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -15,7 +15,7 @@ ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "US City Weather"),
   p("This is an interactive data visualization focused on data from the ", 
     tags$a(href = "https://fivethirtyeight.com/features/what-12-months-of-record-setting-temperatures-looks-like-across-the-u-s/", "What 12 Months Of Record-Setting Temperatures Looks Like Across The U.S."),
-    "The project is on gitthub."),
+    "The project's code is viewable on gitthub."),
   sidebarLayout(
     sidebarPanel(
       uiOutput("tabUi")
@@ -62,6 +62,7 @@ server <- function(input, output) {
       weather$average_min_temp <- fahrenheit.to.celsius(weather$average_min_temp)
       weather$average_max_temp <- fahrenheit.to.celsius(weather$average_max_temp)
     }
+    tempDates(input$map.date)
     return(weather)
   })
   temp.input <- reactive({
@@ -115,7 +116,6 @@ server <- function(input, output) {
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   output$weathermap <- renderLeaflet({
-    #tempDates(input$map.date)
     label.pls <- paste0(location[,1], "\n Actual Mean Temp (F):",location[,5])
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 

@@ -23,8 +23,8 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(id = "tab",
         tabPanel( title = "Plot", value = "plot", plotlyOutput("tempplot")),
-        tabPanel("Table", value = "table", dataTableOutput("temptable")),
-        tabPanel("Map", value = "map", leafletOutput("weathermap"))
+        tabPanel(title = "Table", value = "table", dataTableOutput("temptable")),
+        tabPanel(title = "Map", value = "map", leafletOutput("weathermap"))
       )
     )
   ),
@@ -62,7 +62,7 @@ server <- function(input, output) {
       weather$average_min_temp <- fahrenheit.to.celsius(weather$average_min_temp)
       weather$average_max_temp <- fahrenheit.to.celsius(weather$average_max_temp)
     }
-    tempDates(input$map.date)
+    #tempDates(input$map.date)
     return(weather)
   })
   temp.input <- reactive({
@@ -129,8 +129,7 @@ server <- function(input, output) {
     return(temp)
   })
   output$temptable <- renderDataTable({
-    datatable(tableDate(), colnames = c("Date", "Actual Mean Temp", "Actual Min Temp", "Actual Max Temp", "Average Min Temp", "Average Max Temp", "Record Min Temp", "Record Min Temp", "Record Max Temp", "Record Min Temp Year", "Record Max Temp Year", "Actual Precipitation", "Average Precipitation", "Record Precipitation"))
-    #tableDate()
+    datatable(tableDate(), colnames = c("Date", "Actual Mean Temp", "Actual Min Temp", "Actual Max Temp", "Average Min Temp", "Average Max Temp", "Record Min Temp", "Record Max Temp", "Record Min Temp Year", "Record Max Temp Year", "Actual Precipitation", "Average Precipitation", "Record Precipitation"))
   })
 }
 

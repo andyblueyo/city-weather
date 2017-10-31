@@ -54,6 +54,7 @@ server <- function(input, output) {
     rightCity <- location %>% filter(input$cityInput == city)
     fileName <- rightCity[[2]]
     weather <- read.csv(paste0("data/", fileName, ".csv"), stringsAsFactors = FALSE)
+    rownames(weather) <- NULL
     weather$date <- as.Date(weather$date, "%Y-%m-%d")
     if (input$tempUnit == "c") {
       weather$actual_mean_temp <- fahrenheit.to.celsius(weather$actual_mean_temp)
@@ -126,6 +127,7 @@ server <- function(input, output) {
     dateTable <- as.character(temp.input()[,1])
     temp <- temp.input() %>% mutate(date = dateTable)
     temp <- temp[complete.cases(temp), ]
+    rownames(temp) <- c()
     return(temp)
   })
   output$temptable <- renderDataTable({

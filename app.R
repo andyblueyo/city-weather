@@ -7,7 +7,6 @@ library(maps)
 library(htmltools)
 library(weathermetrics)
 library(DT)
-#source("tempDates.R")
 
 location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
@@ -63,7 +62,6 @@ server <- function(input, output) {
       weather$average_min_temp <- fahrenheit.to.celsius(weather$average_min_temp)
       weather$average_max_temp <- fahrenheit.to.celsius(weather$average_max_temp)
     }
-    #tempDates(input$map.date)
     return(weather)
   })
   temp.input <- reactive({
@@ -116,7 +114,21 @@ server <- function(input, output) {
       add_trace(y = ~average_max_temp, name = 'Average Max Temp', opacity = 0.5, connectgaps = FALSE) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
+  weatherMapTemp <- reactive({
+    files <- location$file_name
+    charDate <- function(csv){
+      csv <- read.csv(paste0("data/",csv,".csv"), stringsAsFactors = FALSE)
+      csv$date <- as.Date(csv$date, "%Y-%m-%d")
+      return(csv)
+    }
+    list.data <- lapply(files, charDate)
+    for (i in seq(list.data)) {
+      list.data[[i]] <- list.data[[i]] %>% filter(list.data[[i]]$date == input$map.date)
+      location$actual_mean_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_mean_temp
+    }
+  })
   output$weathermap <- renderLeaflet({
+    weatherMapTemp()
     label.pls <- paste0(location[,1], "\n Actual Mean Temp (F):",location[,5])
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 

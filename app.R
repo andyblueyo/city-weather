@@ -125,12 +125,16 @@ server <- function(input, output) {
     for (i in seq(list.data)) {
       list.data[[i]] <- list.data[[i]] %>% filter(list.data[[i]]$date == input$map.date)
       location$actual_mean_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_mean_temp
+      location$actual_min_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_min_temp
+      location$actual_max_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_max_temp
     }
   })
   output$weathermap <- renderLeaflet({
     weatherMapTemp()
     label.pls <- lapply(seq(nrow(location)), function(i) { # from https://stackoverflow.com/questions/43144596/r-and-leaflet-how-to-arrange-label-text-across-multiple-lines
-      paste0(location[i,1], "<p></p>", "Actual Mean Temp (F):",location[i,5])
+      paste0(location[i,1], "<p></p>Actual Mean Temp (F):",location[i,5],
+             "<p></p>Actual Min Temp (F):", location[i,6],
+             "<p></p>Actual Max Temp (F):", location[i,7])
     })
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 

@@ -129,7 +129,7 @@ server <- function(input, output) {
   })
   output$weathermap <- renderLeaflet({
     weatherMapTemp()
-    label.pls <- lapply(seq(nrow(location)), function(i) {
+    label.pls <- lapply(seq(nrow(location)), function(i) { # from https://stackoverflow.com/questions/43144596/r-and-leaflet-how-to-arrange-label-text-across-multiple-lines
       paste0(location[i,1], "<p></p>", "Actual Mean Temp (F):",location[i,5])
     })
     mapStates <- map("state", fill = TRUE, plot = FALSE)

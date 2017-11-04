@@ -129,11 +129,13 @@ server <- function(input, output) {
   })
   output$weathermap <- renderLeaflet({
     weatherMapTemp()
-    label.pls <- paste0(location[,1], "\n Actual Mean Temp (F):",location[,5])
+    label.pls <- lapply(seq(nrow(location)), function(i) {
+      paste0(location[i,1], "<p></p>", "Actual Mean Temp (F):",location[i,5])
+    })
     mapStates <- map("state", fill = TRUE, plot = FALSE)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
-      addMarkers(lat = location[,3], lng = location[,4], label = ~htmlEscape(label.pls))
+      addMarkers(lat = location[,3], lng = location[,4], label = lapply(label.pls, HTML))
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])

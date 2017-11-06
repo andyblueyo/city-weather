@@ -42,7 +42,8 @@ server <- function(input, output) {
                      radioButtons(inputId = "tempUnit", label = "Temp Unit", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE),
                      sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)))
     } else {
-      uiList <- list(dateInput(inputId = "map.date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
+      uiList <- list(dateInput(inputId = "map.date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"),
+                     radioButtons(inputId = "tempUnitMap", label = "Temp Unit", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE))
     }
     return(uiList)
   })
@@ -127,6 +128,11 @@ server <- function(input, output) {
       location$actual_mean_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_mean_temp
       location$actual_min_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_min_temp
       location$actual_max_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_max_temp
+    }
+    if (input$tempUnitMap == "c") {
+      location$actual_mean_temp <- fahrenheit.to.celsius(location$actual_mean_temp)
+      location$actual_min_temp <- fahrenheit.to.celsius(location$actual_min_temp)
+      location$actual_max_temp <- fahrenheit.to.celsius(location$actual_max_temp)
     }
   })
   output$weathermap <- renderLeaflet({

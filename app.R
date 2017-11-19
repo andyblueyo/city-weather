@@ -14,7 +14,7 @@ ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "US City Weather"),
   p("This is an interactive data visualization focused on data from the ", 
     tags$a(href = "https://fivethirtyeight.com/features/what-12-months-of-record-setting-temperatures-looks-like-across-the-u-s/", "What 12 Months Of Record-Setting Temperatures Looks Like Across The U.S."),
-    "The project's code is viewable on ", tags$a(href = "https://github.com/andyblueyo/city-weather", "GitHub")),
+    "article. The project's code is viewable on ", tags$a(href = "https://github.com/andyblueyo/city-weather", "GitHub")),
   sidebarLayout(
     sidebarPanel(
       uiOutput("tabUi")
@@ -36,14 +36,13 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$tabUi <- renderUI({
     if (input$tab == "plot" | input$tab == "table") {
-      uiList <- list(selectInput(inputId = "cityInput", label = "City Name", choices = sort(unique(location$city)), selected = "Seattle"),
-                     dateRangeInput(inputId = "date", label = "Date Range", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
-                     radioButtons(inputId = "tempType", label = "Temp Range Type", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
-                     radioButtons(inputId = "tempUnit", label = "Temp Unit", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE),
-                     sliderInput(inputId = "temp", label = "Temp Range", min = -30, max = 130, value = c(20,75)))
+      uiList <- list(selectInput(inputId = "cityInput", label = "Select a city:", choices = sort(unique(location$city)), selected = "Seattle"),
+                     dateRangeInput(inputId = "date", label = "Select the range of dates:", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
+                     radioButtons(inputId = "tempType", label = "Select type of temperture to change:", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
+                     radioButtons(inputId = "tempUnit", label = "Select temperture unit:", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE),
+                     sliderInput(inputId = "temp", label = "Select range of tempertures to display:", min = -30, max = 130, value = c(20,75)))
     } else {
-      uiList <- list(dateInput(inputId = "map.date", label = "Date", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"),
-                     radioButtons(inputId = "tempUnitMap", label = "Temp Unit", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE))
+      uiList <- list(dateInput(inputId = "map.date", label = "Select the date:", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
     }
     return(uiList)
   })
@@ -128,11 +127,6 @@ server <- function(input, output) {
       location$actual_mean_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_mean_temp
       location$actual_min_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_min_temp
       location$actual_max_temp[location$file_name == files[i]] <<- list.data[[i]]$actual_max_temp
-    }
-    if (input$tempUnitMap == "c") {
-      location$actual_mean_temp <- fahrenheit.to.celsius(location$actual_mean_temp)
-      location$actual_min_temp <- fahrenheit.to.celsius(location$actual_min_temp)
-      location$actual_max_temp <- fahrenheit.to.celsius(location$actual_max_temp)
     }
   })
   output$weathermap <- renderLeaflet({

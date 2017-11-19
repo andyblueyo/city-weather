@@ -106,12 +106,13 @@ server <- function(input, output) {
       b = 160,
       t = 50
     )
-    plot_ly(temp.input(), x = ~date, y = ~actual_max_temp, type = 'scatter', mode = 'lines', connectgaps = FALSE, opacity = 0.5, hoverinfo ='text', 
-            text = ~paste('Date: ', date, '<br> Max Temp: ', actual_max_temp,'<br> Mean Temp:', actual_mean_temp, '<br> Min Temp: ', actual_min_temp, '<br> Avg Min Temp: ', average_min_temp, '<br> Avg Max Temp: ', average_max_temp), name = 'Max Temp') %>% 
-      add_trace(y = ~actual_mean_temp, name = 'Mean Temp', opacity = 0.5, connectgaps = FALSE) %>% 
-      add_trace(y = ~actual_min_temp, name = 'Min Temp', opacity = 0.5, connectgaps = FALSE) %>%
-      add_trace(y = ~average_min_temp, name = 'Average Min Temp', opacity = 0.5, connectgaps = FALSE) %>% 
-      add_trace(y = ~average_max_temp, name = 'Average Max Temp', opacity = 0.5, connectgaps = FALSE) %>% 
+    plot_ly(temp.input(), x = ~date, y = ~record_max_temp, type = 'scatter', mode = 'lines', line = list(color = 'rgb(201, 224, 255)'), connectgaps = FALSE, name = 'Record Max Temp') %>% 
+      add_trace(y = ~record_min_temp, name = 'Record Min Temp', line = list(color = 'rgb(201, 224, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_mean_temp, name = 'Actual Mean Temp', line = list(color = 'rgb(255, 0, 0)'), connectgaps = FALSE) %>%
+      add_trace(y = ~average_min_temp, name = 'Average Min Temp',line = list(color = 'rgb(66, 148, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~average_max_temp, name = 'Average Max Temp', line = list(color = 'rgb(66, 148, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_min_temp, name = 'Actual Min Temp', line = list(color = 'rgb(6, 54, 132)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_max_temp, name = 'Actual Max Temp', line = list(color = 'rgb(6, 54, 132)'), connectgaps = FALSE) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   weatherMapTemp <- reactive({

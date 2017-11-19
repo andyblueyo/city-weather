@@ -15,6 +15,7 @@ ui <- fluidPage(
   p("This is an interactive data visualization focused on data from the ", 
     tags$a(href = "https://fivethirtyeight.com/features/what-12-months-of-record-setting-temperatures-looks-like-across-the-u-s/", "What 12 Months Of Record-Setting Temperatures Looks Like Across The U.S."),
     "article. The project's code is viewable on ", tags$a(href = "https://github.com/andyblueyo/city-weather", "GitHub")),
+  p("The data is collecting a wide variety of tempertures across US cities."),
   sidebarLayout(
     sidebarPanel(
       uiOutput("tabUi")
@@ -61,6 +62,8 @@ server <- function(input, output) {
       weather$actual_max_temp <- fahrenheit.to.celsius(weather$actual_max_temp)
       weather$average_min_temp <- fahrenheit.to.celsius(weather$average_min_temp)
       weather$average_max_temp <- fahrenheit.to.celsius(weather$average_max_temp)
+      weather$record_min_temp <- fahrenheit.to.celsius(weather$record_min_temp)
+      weather$record_max_temp <- fahrenheit.to.celsius(weather$record_max_temp)
     }
     return(weather)
   })

@@ -40,7 +40,7 @@ server <- function(input, output) {
                      dateRangeInput(inputId = "date", label = "Select the range of dates:", start = "2014-7-1", end = "2015-6-29", min = "2014-7-1", max = "2015-6-30"),
                      radioButtons(inputId = "tempType", label = "Select type of temperture to change:", choices = list("Max" = "actual_max_temp", "Mean" = "actual_mean_temp", "Min" = "actual_min_temp"), inline = TRUE),
                      radioButtons(inputId = "tempUnit", label = "Select temperture unit:", choices = list("Farenheit" = "f", "Celsius" = "c"), inline = TRUE),
-                     sliderInput(inputId = "temp", label = "Select range of tempertures to display:", min = -30, max = 130, value = c(20,75)))
+                     sliderInput(inputId = "temp", label = "Select range of tempertures to display:", min = -30, max = 130, value = c(0,120)))
     } else {
       uiList <- list(dateInput(inputId = "map.date", label = "Select the date:", value = "2014-7-4", min = "2014-7-1", max = "2015-6-30"))
     }
@@ -107,12 +107,12 @@ server <- function(input, output) {
       t = 50
     )
     plot_ly(temp.input(), x = ~date, y = ~record_max_temp, type = 'scatter', mode = 'lines', line = list(color = 'rgb(201, 224, 255)'), connectgaps = FALSE, name = 'Record Max Temp') %>% 
-      add_trace(y = ~record_min_temp, name = 'Record Min Temp', line = list(color = 'rgb(201, 224, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~record_min_temp, fill = 'tonexty', name = 'Record Min Temp', line = list(color = 'rgb(201, 224, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~average_min_temp, fill='tonexty',name = 'Average Min Temp',line = list(color = 'rgb(66, 148, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~average_max_temp, fill='tonexty',name = 'Average Max Temp', line = list(color = 'rgb(66, 148, 255)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_min_temp, fill='tonexty',name = 'Actual Min Temp', line = list(color = 'rgb(6, 54, 132)'), connectgaps = FALSE) %>% 
+      add_trace(y = ~actual_max_temp, fill='tonexty',name = 'Actual Max Temp', line = list(color = 'rgb(6, 54, 132)'), connectgaps = FALSE) %>%
       add_trace(y = ~actual_mean_temp, name = 'Actual Mean Temp', line = list(color = 'rgb(255, 0, 0)'), connectgaps = FALSE) %>%
-      add_trace(y = ~average_min_temp, name = 'Average Min Temp',line = list(color = 'rgb(66, 148, 255)'), connectgaps = FALSE) %>% 
-      add_trace(y = ~average_max_temp, name = 'Average Max Temp', line = list(color = 'rgb(66, 148, 255)'), connectgaps = FALSE) %>% 
-      add_trace(y = ~actual_min_temp, name = 'Actual Min Temp', line = list(color = 'rgb(6, 54, 132)'), connectgaps = FALSE) %>% 
-      add_trace(y = ~actual_max_temp, name = 'Actual Max Temp', line = list(color = 'rgb(6, 54, 132)'), connectgaps = FALSE) %>% 
       layout(xaxis = x, yaxis = y, title = paste("Temperature of", input$cityInput), barmode = 'overlay', margin = m)
   })
   weatherMapTemp <- reactive({

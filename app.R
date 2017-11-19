@@ -133,14 +133,18 @@ server <- function(input, output) {
   output$weathermap <- renderLeaflet({
     weatherMapTemp()
     label.pls <- lapply(seq(nrow(location)), function(i) { # from https://stackoverflow.com/questions/43144596/r-and-leaflet-how-to-arrange-label-text-across-multiple-lines
-      paste0(location[i,1], "<p></p>Actual Mean Temp (F):",location[i,5],
-             "<p></p>Actual Min Temp (F):", location[i,6],
-             "<p></p>Actual Max Temp (F):", location[i,7])
+      paste0(location[i,1], "<p></p>Actual Mean Temperture (F):",location[i,5],
+             "<p></p>Actual Min Temperture (F):", location[i,6],
+             "<p></p>Actual Max Temperture (F):", location[i,7])
     })
     mapStates <- map("state", fill = TRUE, plot = FALSE)
+    bins <- seq(-10, 130, 10)
+    pal <- colorBin(palette = "YlOrRd", domain = location$actual_mean_temp, bins = bins)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
-      addMarkers(lat = location[,3], lng = location[,4], label = lapply(label.pls, HTML))
+      addCircleMarkers(lat = location[,3], lng = location[,4], radius = 10, label = lapply(label.pls, HTML),
+                 stroke = FALSE, fillOpacity = 0.75, color = ~pal(location[,5])) %>% 
+      addLegend(pal = pal, values = bins, opacity = 0.7, title = "Actual Mean Temperture", position = "bottomright")
   })
   tableDate <- reactive({
     dateTable <- as.character(temp.input()[,1])

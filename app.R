@@ -12,10 +12,14 @@ location <- read.csv("data/location.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   titlePanel("City Weather", windowTitle = "US City Weather"),
-  p("This is an interactive data visualization focused on data from the ", 
+  p("This was an interactive data visualization inspired by the data from the FiveThirtyEight article: ", 
     tags$a(href = "https://fivethirtyeight.com/features/what-12-months-of-record-setting-temperatures-looks-like-across-the-u-s/", "What 12 Months Of Record-Setting Temperatures Looks Like Across The U.S."),
-    "article. The project's code is viewable on ", tags$a(href = "https://github.com/andyblueyo/city-weather", "GitHub")),
-  p("The data is collecting a wide variety of tempertures across US cities."),
+    "Users can interact and ask questions about what the temperatures of various US Cities from July 2014 to June 2015 The data set provided daily temperatures for"), 
+  tags$li("actual mean, max, and min temperature"),
+  tags$li("record high and low temperature"),
+  tags$li("average high and low temperture"),
+  p(),
+  p("The code is available on ", tags$a(href = "https://github.com/andyblueyo/city-weather", "GitHub"), "."),
   sidebarLayout(
     sidebarPanel(
       uiOutput("tabUi")
@@ -145,7 +149,7 @@ server <- function(input, output) {
     pal <- colorBin(palette = "YlOrRd", domain = location$actual_mean_temp, bins = bins)
     leaflet(data = mapStates) %>% addTiles() %>% 
       addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE) %>% 
-      addCircleMarkers(lat = location[,3], lng = location[,4], radius = 10, label = lapply(label.pls, HTML),
+      addCircleMarkers(lat = location[,3], lng = location[,4], radius = 20, label = lapply(label.pls, HTML),
                  stroke = FALSE, fillOpacity = 0.75, color = ~pal(location[,5])) %>% 
       addLegend(pal = pal, values = bins, opacity = 0.7, title = "Actual Mean Temperture", position = "bottomright")
   })
